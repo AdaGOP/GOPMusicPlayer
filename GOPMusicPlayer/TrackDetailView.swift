@@ -4,7 +4,6 @@
 //
 
 import SwiftUI
-import Observation
 
 struct TrackDetailView: View {
     // @Environment: Reads an observable object provided by a parent view's environment() modifier

@@ -4,7 +4,6 @@
 //
 
 import SwiftUI
-import Observation
 
 // @Observable is used for Environment as well in modern SwiftUI
 @Observable
