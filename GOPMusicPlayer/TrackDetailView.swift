@@ -7,6 +7,9 @@ import SwiftUI
 import Observation
 
 struct TrackDetailView: View {
+    // @Environment: Reads an observable object provided by a parent view's environment() modifier
+    @Environment(UserSettings.self) private var settings
+    
     // We pass the same observable player object here. 
     // @Bindable allows us to create bindings to its properties in this view as well.
     @Bindable var player: Player
@@ -41,6 +44,17 @@ struct TrackDetailView: View {
 
             // Modifying the state from this screen updates the PlayerView as well
             PlayButton(isPlaying: $player.isPlaying)
+            
+            Spacer()
+            
+            // @Bindable can also be used to create bindings to environment objects 
+            // if we need to mutate them using UI controls like Toggles
+            @Bindable var settingsBinding = settings
+            
+            Toggle("Show Track Duration in Queue", isOn: $settingsBinding.showTrackDuration)
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
             
             Spacer()
         }

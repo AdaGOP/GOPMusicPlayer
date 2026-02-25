@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct PlayerView: View {
+    // @Environment: Reads an observable object provided by a parent view's environment() modifier
+    @Environment(UserSettings.self) private var settings
+    
     // @State: Creates and manages a source of truth for data within this view. Here, it instantiates the Player model.
     @State private var player = Player(currentTrack: "The Beatles - Come Together")
     
@@ -17,9 +20,21 @@ struct PlayerView: View {
             @Bindable var playerBinding = player
             
             VStack(spacing: 20) {
-                Text("Music Player")
-                    .font(.largeTitle)
-                    .bold()
+                HStack {
+                    Text("Music Player")
+                        .font(.largeTitle)
+                        .bold()
+                    
+                    Spacer()
+                    
+                    // Simple example of modifying the environment state
+                    Button(action: {
+                        settings.isDarkModeEnabled.toggle()
+                    }) {
+                        Image(systemName: settings.isDarkModeEnabled ? "moon.fill" : "sun.max.fill")
+                            .foregroundColor(.primary)
+                    }
+                }
                 
 
                 
@@ -61,6 +76,12 @@ struct PlayerView: View {
                                             Text(song.artist)
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
+                                            
+                                            if settings.showTrackDuration {
+                                                Text("3:30") // Dummy duration data
+                                                    .font(.caption)
+                                                    .foregroundColor(.gray)
+                                            }
                                         }
                                         
                                         Spacer()
@@ -116,6 +137,8 @@ struct PlayerView: View {
             }
             .padding()
         }
+        // Applying the environment's dark mode preference
+        .preferredColorScheme(settings.isDarkModeEnabled ? .dark : .light)
     }
 }
 

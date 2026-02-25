@@ -88,3 +88,51 @@ Understanding how to manage state is crucial for building robust SwiftUI applica
       }
   }
   ```
+
+---
+
+### 🌟 Bonus Material: Environment Objects
+
+Once you understand the four main property wrappers above, you can explore the use of the **Environment**. This is demonstrated in the app as an *additional* feature to manage global settings like dark mode and display preferences.
+
+#### `@Environment` and `.environment()`
+- **Definition:** A way to place observable objects into the view hierarchy so that any child view (no matter how deep) can read or modify them without having to pass them explicitly through every level's initializer (like we do with `Player`).
+- **When to use:** Use this for truly global data, like user preferences, authentication state, or theme settings.
+- **How to use:** First, inject the object at the root of your app using the `.environment()` modifier. Then, read it in any downstream child view using `@Environment`.
+
+**1. Injecting (in the App struct at `GOPMusicPlayerApp.swift`):**
+```swift
+@main
+struct GOPMusicPlayerApp: App {
+    @State private var settings = UserSettings()
+    
+    var body: some Scene {
+        WindowGroup {
+            PlayerView()
+                .environment(settings) // Injecting it here
+        }
+    }
+}
+```
+
+**2. Reading (in child views like `PlayerView` or `TrackDetailView`):**
+```swift
+struct PlayerView: View {
+    // Reading the environment object
+    @Environment(UserSettings.self) private var settings
+    
+    var body: some View {
+        // You can now read properties
+        if settings.showTrackDuration {
+            Text("Duration")
+        }
+        
+        // Or mutate properties in actions
+        Button("Toggle Dark Mode") {
+            settings.isDarkModeEnabled.toggle()
+        }
+    }
+}
+```
+
+> **Note:** Just like `@State` and `@Bindable`, modern Swift 5.9 allows us to mutate properties directly from `@Environment` without needing specific bindings, as long as the object is marked with `@Observable`.
